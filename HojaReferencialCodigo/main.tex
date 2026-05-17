@@ -1,0 +1,100 @@
+\documentclass[24pt,letterpaper]{article}
+\usepackage[left=1cm,right=1cm,top=1cm,bottom=1cm]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{parskip}
+
+\title{Hoja Referencial MIPS 32}
+\author{Maivet Pereira}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{Aritmetica}
+add(suma) \hspace{0.60cm} add \$s1,\$s2,\$s3  \hspace{0,60cm} \# \$s1 = \$s2 + \$s3
+
+subtract(resta) \hspace{0.60cm} sub \$s1,\$s2,\$s3  \hspace{0,60cm} \# \$s1 = \$s2 - \$s3
+
+add immediate \hspace{0.60cm} addi \$s1,\$s2,100  \hspace{0.60cm} \# \$s1 = \$s2 + 100
+
+\section{Transferencia de Datos}
+w = Word (Palabra entera = 4 bytes = El tamaño de un int normal).
+
+h = Halfword (Media palabra = 2 bytes = El tamaño de un short).
+
+b = Byte (Un solo byte = 1 byte = El tamaño de un char).
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+load word \hspace{0.60cm} lw \$s1, 4(\$s2)\$s1 = TRAE un entero desde la RAM (dirección \$s2 + 100)
+
+store word \hspace{0.60cm} sw \$s1, 8(\$s2) \hspace{0.60cm} \# GUARDA el entero de \$s1 en la RAM (dirección \$s2 + 100)
+
+load halfword \hspace{0.60cm} lh \$s1, 100(\$s2) \hspace{0.60cm} \# \$s1 = TRAE medio entero  desde la RAM (dirección \$s2 + 100)
+
+store halfword \hspace{0.60cm} sh \$s1, 100(\$s2) \hspace{0.60cm} \# GUARDA solo la mitad de \$s1 en la RAM (dirección \$s2 + 100)
+
+load byte \hspace{0.60cm} lb \$s1, 100(\$s2) \hspace{0.60cm} \# \$s1 = TRAE un solo byte desde la RAM (dirección \$s2 + 100)
+
+store byte \hspace{0.60cm} sb \$s1, 100(\$s2) \hspace{0.60cm} \# GUARDA solo el último byte de \$s1 en la RAM (dirección \$s2 + 100)
+
+load upper immediate \hspace{0.60cm} lui \$s1, 100 \hspace{0.60cm} \# Mete el número 100 en la parte ALTA (izquierda) de \$s1 (y llena de ceros el resto)
+
+\section{Logica}
+and \hspace{0.60cm} and \$s1, \$s2, \$s3 \hspace{0.60cm} \# \$s1 = \$s2 Y \$s3 (bit a bit, da 1 solo si ambos bits son 1)
+
+or \hspace{0.60cm} or \$s1, \$s2, \$s3 \hspace{0.60cm} \# \$s1 = \$s2 O \$s3 (bit a bit, da 1 si al menos uno de los bits es 1)
+
+xor \hspace{0.60cm} xor \$s1, \$s2, \$s3 \hspace{0.60cm} \# \$s1 = \$s2 o exclusivo \$s3 (da 1 si los bits son diferentes)
+
+nor \hspace{0.60cm} nor \$s1, \$s2, \$s3 \hspace{0.60cm} \# \$s1 = NO (\$s2 O \$s3) (invierte el resultado del O, util para hacer un NOT)
+
+and immediate \hspace{0.60cm} andi \$s1, \$s2, 100 \hspace{0.60cm} \# \$s1 = \$s2 Y el número 100 (para comparar un registro con una constante)
+
+or immediate \hspace{0.60cm} ori \$s1, \$s2, 100 \hspace{0.60cm} \# \$s1 = \$s2 O el número 100 (se usa mucho junto a lui para cargar constantes grandes)
+
+shift left logical \hspace{0.60cm} sll \$s1, \$s2, 2 \hspace{0.60cm} \# \$s1 = Desplaza los bits de \$s2 a la IZQUIERDA 2 veces (Equivale a multiplicar por 4)
+
+shift right logical \hspace{0.60cm} srl \$s1, \$s2, 2 \hspace{0.60cm} \# \$s1 = desplaza los bits de \$s2 a la DERECHA 2 veces (equivale a dividir entre 4)
+
+\section{Salto Condicional}
+branch if equal \hspace{0.60cm} beq \$s1, \$s2, label \hspace{0.60cm} \# si (\$s1 == \$s2) salta a la etiqueta label
+
+branch if not equal \hspace{0.60cm} bne \$s1, \$s2, label \hspace{0.60cm} \# si (\$s1 != \$s2) salta a la etiqueta label
+
+\section{Salto Incondicional}
+jump \hspace{0.60cm} j label \hspace{0.60cm} \# salto incondicional (va directo a la etiqueta label sin preguntar)
+
+jump and link \hspace{0.60cm} jal funcion \hspace{0.60cm} \# llama a una funcion y guarda la direccion de retorno en \$ra
+
+jump register \hspace{0.60cm} jr \$ra \hspace{0.60cm} \# salta a la direccion guardada en \$ra (se usa para volver de una funcion)
+
+set on less than \hspace{0.60cm} slt \$s1, \$s2, \$s3 \hspace{0.60cm} \# si (\$s2 < \$s3) \$s1 = 1; si no \$s1 = 0 (sirve para los if de menor que)
+
+set on less than immediate \hspace{0.60cm} slti \$s1, \$s2, 100 \hspace{0.60cm} \# si (\$s2 < 100) \$s1 = 1; si no \$s1 = 0 (compara un registro con un numero)
+
+\section{Formato Basico de Instruccion}
+\vspace{0.4cm}
+
+\vspace{0.2cm}
+\noindent \textbf{R} \\
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+cod oper (6 bits) & rs (5 bits) & rt (5 bits) & rd (5 bits) & desplaz (5 bits) & func (6 bits) \\ \hline
+\end{tabular}
+
+\vspace{0.3cm}
+\noindent \textbf{I} \\
+\begin{tabular}{|c|c|c|c|}
+\hline
+cod oper (6 bits) & rs (5 bits) & rt (5 bits) & inmediato (16 bits) \\ \hline
+\end{tabular}
+
+\vspace{0.3cm}
+\noindent \textbf{J} \\
+\begin{tabular}{|c|c|}
+\hline
+cod oper (6 bits) & direccion (26 bits) \\ \hline
+\end{tabular}
+\end{document}
