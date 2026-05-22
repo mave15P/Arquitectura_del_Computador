@@ -1,0 +1,162 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[spanish,es-tabla]{babel} % Títulos automáticos en español y tablas consistentes
+\usepackage{xcolor} % Textos a color
+\usepackage{geometry}
+\geometry{margin=2cm} % Márgenes de 2.5 cm en toda la hoja
+\usepackage{booktabs} % Tablas limpias
+\usepackage{amsmath} % Entornos matemáticos avanzados
+\usepackage{amsfonts} % Fuentes matemáticas
+\usepackage{tcolorbox} % Recuadros para las fórmulas
+\usepackage{enumitem} % Control avanzado de listas
+
+% Definición de color morado
+\definecolor{moradovivo}{RGB}{142, 36, 170} 
+\definecolor{lilasuave}{RGB}{250, 243, 253}
+
+% Configuración de los recuadros de fórmulas
+\tcbset{
+    colback=lilasuave,
+    colframe=lilasuave, 
+    arc=2mm,
+    boxrule=0pt, 
+    left=4mm,
+    right=4mm,
+    top=3mm,
+    bottom=3mm
+}
+\title{\textbf{\color{moradovivo}Hoja de Referencia de Prestaciones}}
+\author{Maivet Pereira}
+\date{May 2026}
+
+\begin{document}
+
+\maketitle
+
+\section{\textbf{Tiempo de CPU para un Programa (Fórmula Fundamental)}}
+{\color{moradovivo}\hrule height 1pt} \vspace{0.3cm}
+Esta es la ecuación principal para medir el rendimiento de un procesador. Desglosa el tiempo de ejecución en tres componentes críticos: el recuento de instrucciones, los ciclos de reloj por instrucción (CPI) y el período de reloj.
+
+\begin{tcolorbox}
+\[
+\text{Tiempo de CPU} = \text{Recuento de Instrucciones} \times \text{CPI} \times \text{Tiempo de Ciclo de Reloj}
+\]
+O en función de la frecuencia de reloj ($f$):
+\[
+\text{Tiempo de CPU} = \frac{\text{Recuento de Instrucciones} \times \text{CPI}}{\text{Frecuencia de Reloj}}
+\]
+\end{tcolorbox}
+
+\begin{itemize}[leftmargin=*]
+    Esto es la métrica absoluta que calcula el tiempo neto que tarda el procesador en ejecutar las instrucciones de un programa específico (excluyendo esperas de E/S o del sistema operativo).
+    \item \textbf{¿Para qué se usa?} Para evaluar el impacto total en el rendimiento al alterar el hardware (frecuencia, microarquitectura) o el software (compilador, optimización del código).
+    \item \textbf{¿Cómo se usa?} Se identifican las tres variables y se multiplican directamente cuidando la consistencia de las unidades (frecuencia en Hz y tiempo en segundos o nanosegundos).
+
+
+\subsection*{Ejemplo Práctico}
+Un programa ejecuta $10 \times 10^6$ instrucciones en un procesador a $2\text{ GHz}$ ($2 \times 10^9\text{ Hz}$) con un $\text{CPI} = 2.5$.
+\begin{align*}
+\text{Tiempo de Ciclo} &= \frac{1}{2 \times 10^9\text{ Hz}} = 0.5\text{ ns} = 0.5 \times 10^{-9}\text{ s} \\
+\text{Tiempo de CPU} &= (10 \times 10^6) \times 2.5 \times (0.5 \times 10^{-9}\text{ s}) = \mathbf{0.0125\text{ s (12.5 ms)}}
+\end{align*}
+
+\section{\textbf{Rendimiento Relativo (Comparación de Prestaciones)}}
+{\color{moradovivo}\hrule height 1pt} \vspace{0.3cm}
+El rendimiento es el inverso multiplicativo del tiempo de ejecución. Permite comparar cuantitativamente qué tan rápido es un computador respecto a otro.
+
+\begin{tcolorbox}
+\[
+\text{Rendimiento} = \frac{1}{\text{Tiempo de Ejecución}}
+\]
+Para comparar dos sistemas (A y B):
+\[
+\frac{\text{Rendimiento}_A}{\text{Rendimiento}_B} = \frac{\text{Tiempo de Ejecución}_B}{\text{Tiempo de Ejecución}_A} = n
+\]
+\end{tcolorbox}
+
+\begin{itemize}[leftmargin=*]
+    Es una medida comparativa de velocidad. Si el ratio $n > 1$, se concluye formalmente que \textit{``la máquina A es $n$ veces más rápida que la máquina B''}.
+    \item \textbf{¿Para qué se usa?} Para realizar análisis comparativos (\textit{benchmarking}) comerciales y académicos entre diferentes arquitecturas.
+    \item \textbf{¿Cómo se usa?} Se divide el tiempo de ejecución medido en la máquina más lenta entre el tiempo registrado en la máquina más veloz.
+
+
+\subsection*{Ejemplo Práctico}
+El computador A tarda $10\text{ s}$ en procesar un algoritmo, mientras que el computador B tarda $15\text{ s}$:
+\[
+\frac{\text{Rendimiento}_A}{\text{Rendimiento}_B} = \frac{\text{Tiempo}_B}{\text{Tiempo}_A} = \frac{15\text{ s}}{10\text{ s}} = 1.5 \implies \text{\textbf{A es 1.5 veces más rápido que B.}}
+\]
+
+\section{\textbf{Ciclos de Reloj Totales de CPU}}
+{\color{moradovivo}\hrule height 1pt} \vspace{0.3cm}
+Cuando las instrucciones tienen costos de ciclo heterogéneos, se debe calcular la sumatoria ponderada de todas las instrucciones ejecutadas durante la vida del programa.
+
+\begin{tcolorbox}
+\[
+\text{Ciclos de CPU} = \sum_{i=1}^{n} (\text{Recuento de Instrucciones}_i \times \text{CPI}_i)
+\]
+\end{tcolorbox}
+
+\begin{itemize}[leftmargin=*]
+    Es la cantidad total de pulsos de reloj que absorbe el procesador desglosada por categorías de instrucción (aritmética, memoria, saltos).
+    \item \textbf{¿Para qué se usa?} Para identificar con precisión qué tipos de instrucciones consumen más ciclos y así enfocar los esfuerzos de optimización.
+    \item \textbf{¿Cómo se usa?} Se multiplica el volumen de instrucciones de cada clase por su costo individual y se realiza la suma de los productos parciales.
+
+
+\subsection*{Ejemplo Práctico}
+Una carga de trabajo se divide en dos clases primarias:
+\begin{itemize}
+    \item \textbf{Clase A (Aritmética):} 5,000 instrucciones con un $\text{CPI} = 1$.
+    \item \textbf{Clase B (Memoria):} 2,000 instrucciones con un $\text{CPI} = 4$.
+\end{itemize}
+\[
+\text{Ciclos de CPU} = (5,000 \times 1) + (2,000 \times 4) = 5,000 + 8,000 = \mathbf{13,000\text{ ciclos}}
+\]
+
+\section{\textbf{CPI Global o Promedio)}}
+{\color{moradovivo}\hrule height 1pt} \vspace{0.3cm}
+Sintetiza el comportamiento dinámico de la microarquitectura frente a una mezcla de instrucciones determinada.
+
+\begin{tcolorbox}
+\[
+{\footnotesize
+\text{CPI Global} = \frac{\text{ciclos de CPU totales}}{\text{recuento total de instrucciones}} = \sum_{i=1}^{n} \left( \text{CPI}_i \times \frac{\text{recuento de instrucciones}_i}{\text{recuento total de tnstrucciones}} \right)
+}
+\]
+\end{tcolorbox}
+
+\begin{itemize}[leftmargin=*]
+    Esto es el valor promedio ponderado de ciclos de reloj requeridos por instrucción para un programa ejecutable concreto.
+    \item \textbf{¿Para qué se usa?} Para resumir la eficiencia de la microarquitectura (canalización, predicción de saltos) y usarlo en la fórmula fundamental.
+    \item \textbf{¿Cómo se usa?} Dividiendo la cantidad agregada de ciclos de reloj consumidos entre el total general de instrucciones.
+
+
+\subsection*{Ejemplo Práctico}
+Tomando los datos de la sección anterior (13,000 ciclos acumulados y $5,000 + 2,000 = 7,000$ instrucciones):
+\[
+\text{CPI Global} = \frac{13,000\text{ ciclos}}{7,000\text{ instrucciones}} \approx \mathbf{1.86\text{ ciclos por instrucción}}
+\]
+
+\section{\textbf{Ley de Amdahl (Límite del Rendimiento)}}
+{\color{moradovivo}\hrule height 1pt} \vspace{0.3cm}
+Este principio define la ganancia de velocidad teórica máxima que puede experimentar un sistema completo al optimizar solo una sección específica de su carga de trabajo.
+
+\begin{tcolorbox}
+\[
+\text{Tiempo}{\text{nuevo}} = \text{Tiempo}{\text{viejo}} \times \left[ (1 - \text{Fracción}{\text{mejorada}}) + \frac{\text{Fracción}{\text{mejorada}}}{\text{Factor de mejora}} \right]
+\]
+\end{tcolorbox}
+
+\begin{itemize}[leftmargin=*]
+    El límite matemático del rendimiento condicionado por la porción de tiempo que se utiliza una mejora arquitectónica.
+    \item \textbf{¿Para qué se usa?} Para guiar el diseño bajo el criterio de \textit{``hacer más rápido el caso común''}, previniendo el desperdicio de recursos en optimizar secciones poco usadas.
+    \item \textbf{¿Cómo se usa?} Se establece en decimal la fracción de tiempo original afectada y el factor multiplicativo de la aceleración del componente nuevo.
+
+
+\subsection*{Ejemplo Práctico}
+Un programa tarda $100\text{ s}$. El módulo gráfico consume el $40\%$ del tiempo ($\text{Fracción} = 0.4$). Se añade un coprocesador que acelera los gráficos $4$ veces ($\text{Factor} = 4$):
+\[
+\text{Tiempo}_{\text{nuevo}} = 100 \times \left[ (1 - 0.4) + \frac{0.4}{4} \right] = 100 \times [0.6 + 0.1] = \mathbf{70\text{ segundos}}
+\]
+La mejora global es $\frac{100}{70} \approx 1.43$, es decir, el sistema completo se aceleró un $43\%$ a pesar de que una parte se optimizó un $400\%$.
+
+\end{document}
